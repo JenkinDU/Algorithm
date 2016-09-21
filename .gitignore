@@ -6,6 +6,6 @@ classes
 build
 .settings
 gen
-.classpath
-.project
+#.classpath
+#.project
 .DS_Store
