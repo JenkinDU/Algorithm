@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class AlgorithmAssignment {
-	private static String FILE_NAME_ROOT = "./resources/ca/concordia/comp6651/ProgrammingAssignment1Sample";
+	private static final String FILE_NAME_ROOT = "./resources/ca/concordia/comp6651/ProgrammingAssignment1Sample";
 	
 	private static String FILE_NAME = "./resources/ca/concordia/comp6651/ProgrammingAssignment1SampleInput2.txt";
-	private static String OUTPUT_FILE_NAME = "./resources/ca/concordia/comp6651/ProgrammingAssignment1SampleOutput2.txt";
-	private static String DIVIDE_LINE = "-----";
-	private static String OUTPUT_DIVIDE_LINE = "--------------------\n";
-	private static String NO_ANSWER_FOUND = "No Answer Found\n";
+	private static final String OUTPUT_FILE_NAME = "./resources/ca/concordia/comp6651/ProgrammingAssignment1SampleOutput2.txt";
+	private static final String DIVIDE_LINE = "-----";
+	private static final String OUTPUT_DIVIDE_LINE = "--------------------\n";
+	private static final String NO_ANSWER_FOUND = "No Answer Found\n";
 	
 	private int totleLines = 0;
 	private int jumIndex = 0; //begin index of jumbled word
@@ -109,7 +109,7 @@ public class AlgorithmAssignment {
 					} else {
 						if(jumIndex == 0) {
 							jumIndex = lines + 1;
-							System.out.println("find jumbled index:" + jumIndex);
+//							System.out.println("find jumbled index:" + jumIndex);
 						}
 					}
 				}
@@ -262,7 +262,7 @@ public class AlgorithmAssignment {
 		
 		for(int i=0;i<dicStruct.length;i++) {
 			DicStruct dic = dicStruct[i];
-			System.out.println(i+"-"+dic.wordAbs[0]+"-"+dic.word);
+//			System.out.println(i+"-"+dic.wordAbs[0]+"-"+dic.word);
 			if(dic.wordAbs[0] == 1 && original == -1) {
 				if(i<dicStruct.length-1 && dic.equals(dicStruct[i+1])) {
 					original = i;
@@ -327,38 +327,74 @@ public class AlgorithmAssignment {
 				}
 			}
 		}
-		String s = "";
-		for(int i=0;i<outPut.length;i++) {
-			s += outPut[i];
-		}
-//		System.out.println(s);
+		
+//		System.out.println("Echo2- find all the dictionary time is: " + (System.currentTimeMillis()-begin)/1000.0 + "s");
+		
+		/*bad method to amend string*/
+//		String s = "";
+//		for(int i=0;i<outPut.length;i++) {
+//			s += outPut[i];
+//		}
+//		System.out.println("Echo2- finish amend String time is: " + (System.currentTimeMillis()-begin)/1000.0 + "s");
 		FileWriter fw;
 		try {
 			fw = new FileWriter(OUTPUT_FILE_NAME, false);
-			fw.write(s);
+			for(int i=0;i<outPut.length;i++) {
+				fw.write(outPut[i]);
+			}
 			fw.flush();
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+//		System.out.println("Echo2- finish write to file time is: " + (System.currentTimeMillis()-begin)/1000.0 + "s");
 	}
-	
+	private long begin = 0;
 	public void finishIt(AlgorithmAssignment assignment) {
+		begin=System.currentTimeMillis();
+		
 		totleLines = assignment.readFileLines();
+//		long readFilelines = System.currentTimeMillis()-begin;
+//		System.out.println("Read file lines time is: " + readFilelines/1000.0 + "s");
+		
 		dicStruct = new DicStruct[totleLines];
 		createFileStruct(dicStruct);
+//		long createFileStruct = System.currentTimeMillis()-readFilelines;
+//		System.out.println("Read file and create struct time is: " + createFileStruct/1000.0 + "s");
+		
 		quickSortDicStruct(dicStruct, 0, dicStruct.length-1);
+		long quickSortDicStruct = System.currentTimeMillis()-begin;
+		System.out.println("After Quick sort time is: " + quickSortDicStruct/1000.0 + "s");
+		
 		echo2File();
+		
+		System.out.println("Total process time is: " + (System.currentTimeMillis()-begin)/1000.0 + "s");
+		totleLines = 0;
+		jumIndex = 0;
 	}
 	
 	public static void main(String[] args) {
-		long begin=System.currentTimeMillis();
 		AlgorithmAssignment assignment = new AlgorithmAssignment();
+		System.out.println("I-test original file, size is 78k");
 		assignment.finishIt(assignment);
-		
-		System.out.println("Total process time is: " + (System.currentTimeMillis()-begin)/1000.0 + "s");
+		System.out.println("\nII-test 10-times than original file, size is 775k");
+		FILE_NAME = FILE_NAME_ROOT + "InputAll10.txt";
+		assignment.finishIt(assignment);
+		System.out.println("\nIII-test 20-times than original file, size is 1563k");
+		FILE_NAME = FILE_NAME_ROOT + "InputAll20.txt";
+		assignment.finishIt(assignment);
+		System.out.println("\nIV-test 30-times than original file, size is 2344k");
+		FILE_NAME = FILE_NAME_ROOT + "InputAll30.txt";
+		assignment.finishIt(assignment);
+		System.out.println("\nV-test 40-times than original file, size is 3125k");
+		FILE_NAME = FILE_NAME_ROOT + "InputAll40.txt";
+		assignment.finishIt(assignment);
+		System.out.println("\nVI-test 50-times than original file, size is 3906k");
+		FILE_NAME = FILE_NAME_ROOT + "InputAll50.txt";
+		assignment.finishIt(assignment);
+		System.out.println("\nVII-test 100-times than original file, size is 7745k");
+		FILE_NAME = FILE_NAME_ROOT + "InputAll100.txt";
+		assignment.finishIt(assignment);
 	}
 
 }
